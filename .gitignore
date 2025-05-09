@@ -1,0 +1,16 @@
+node_modules
+dist
+build
+out
+.env
+.next
+*.tsbuildinfo
+next-env.d.ts
+.pnp
+.pnp.js
+.yarn/install-state.gz
+.DS_Store
+*.pem
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
