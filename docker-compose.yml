@@ -1,0 +1,16 @@
+services:
+  postgres:
+    image: postgres:15.4
+    restart: always
+    ports:
+      - '54321:5432'
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: aleum
+      POSTGRES_HOST_AUTH_METHOD: trust
+      POSTGRES_DB: postgres
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+
+volumes:
+  postgres-data:
