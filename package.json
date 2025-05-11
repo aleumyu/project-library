@@ -12,6 +12,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@nestjs/mapped-types": "*",
     "concurrently": "^9.1.2"
   }
 }

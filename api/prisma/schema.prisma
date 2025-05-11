@@ -7,9 +7,41 @@
 generator client {
   provider = "prisma-client-js"
   output   = "../generated/prisma"
+  previewFeatures = ["relationJoins"]
 }
 
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String    @id @default(uuid())
+  name          String
+  email         String    @unique
+  password      String
+  loan          Loan[]
+}
+
+model Book {
+  id            String       @id @default(uuid())
+  title         String
+  author        String
+  description   String
+  category      String
+  publisher     String       
+  year          Int
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+  loan          Loan?
+}
+
+model Loan{
+  id            String       @id @default(uuid())
+  bookId        String       @unique
+  book          Book         @relation(fields: [bookId], references: [id])
+  userId        String
+  user          User         @relation(fields: [userId], references: [id])
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
 }
