@@ -8,7 +8,11 @@ import {
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { Reflector } from '@nestjs/core';
+import { JwtPayload } from './auth.service';
 
+export interface RequestWithUser extends Request {
+  user: JwtPayload;
+}
 @Injectable()
 export class AuthGuard implements CanActivate {
   constructor(
@@ -30,8 +34,7 @@ export class AuthGuard implements CanActivate {
     return this.validateRequest(request);
   }
 
-  private validateRequest(request: Request) {
-    console.log('request.headers', request.headers);
+  private validateRequest(request: RequestWithUser) {
     const authHeader = request.headers.authorization;
     if (!authHeader) {
       throw new UnauthorizedException('Missing authorization header');
