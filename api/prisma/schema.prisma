@@ -43,5 +43,7 @@ model Loan{
   userId        String
   user          User         @relation(fields: [userId], references: [id])
   createdAt     DateTime     @default(now())
+  dueDate       DateTime
+  returnedAt    DateTime?
   updatedAt     DateTime     @updatedAt
 }
