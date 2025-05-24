@@ -8,6 +8,7 @@ import { LoansModule } from './loans/loans.module';
 import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
 import authConfig from './config/authConfig';
+import { MemoryMonitorService } from './common/service/memory-monitor.service';
 import { AuthGuard } from './auth/auth.guard';
 import { APP_GUARD } from '@nestjs/core';
 
@@ -30,6 +31,7 @@ import { APP_GUARD } from '@nestjs/core';
     //   useClass: AuthGuard,
     // },
     AppService,
+    MemoryMonitorService,
   ],
 })
 export class AppModule {}
