@@ -42,7 +42,7 @@ export class ErrorsFilter implements ExceptionFilter {
     this.logger.error(
       `Error: ${JSON.stringify(responseBody)}`,
       `Exception: ${exception}`,
-      //   `Stack: ${exception instanceof Error ? exception.stack : ''}`,
+      `Stack: ${exception instanceof Error ? exception.stack : ''}`,
     );
 
     httpAdapter.reply(response, responseBody, httpStatus);
