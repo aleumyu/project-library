@@ -1,34 +1,42 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  UseGuards,
+  Req,
+} from '@nestjs/common';
 import { LoansService } from './loans.service';
-import { CreateLoanDto } from './dto/create-loan.dto';
-import { UpdateLoanDto } from './dto/update-loan.dto';
-
+import { CreateLoanDto, UpdateLoanDto } from './dto/create-loan.dto';
+import { AuthGuard, RequestWithUser } from 'src/auth/auth.guard';
+@UseGuards(AuthGuard)
 @Controller('loans')
 export class LoansController {
   constructor(private readonly loansService: LoansService) {}
 
   @Post()
-  create(@Body() createLoanDto: CreateLoanDto) {
-    return this.loansService.create(createLoanDto);
+  async create(
+    @Body() createLoanDto: CreateLoanDto,
+    @Req() req: RequestWithUser,
+  ) {
+    console.log(req.user);
+    return await this.loansService.create(createLoanDto, req.user.userId);
   }
 
-  @Get()
-  findAll() {
-    return this.loansService.findAll();
+  @Get('/user')
+  async findAll(@Req() req: RequestWithUser) {
+    return await this.loansService.findAllByUser(req.user.userId);
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.loansService.findOne(+id);
+  async findOne(@Param('id') id: string) {
+    return await this.loansService.findOne(id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateLoanDto: UpdateLoanDto) {
-    return this.loansService.update(+id, updateLoanDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.loansService.remove(+id);
+  async update(@Param('id') id: string, @Body() updateLoanDto: UpdateLoanDto) {
+    return await this.loansService.update(id, updateLoanDto);
   }
 }
