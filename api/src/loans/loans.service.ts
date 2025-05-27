@@ -15,16 +15,6 @@ export class LoansService {
       bookId: createLoanDto.bookId,
       userId,
       dueDate: new Date(new Date().getTime() + 7 * 24 * 60 * 60 * 1000),
-      // book: {
-      //   connect: {
-      //     id: createLoanDto.bookId,
-      //   },
-      // },
-      // user: {
-      //   connect: {
-      //     id: userId,
-      //   },
-      // },
     };
     const loan = await this.prisma.loan.create({
       data,

@@ -8,8 +8,10 @@ import { LoansModule } from './loans/loans.module';
 import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
 import authConfig from './config/authConfig';
-import { AuthGuard } from './auth/auth.guard';
-import { APP_GUARD } from '@nestjs/core';
+import { MemoryMonitorService } from './common/service/memory-monitor.service';
+import { HeapdumpService } from './common/service/heapdump.service';
+// import { AuthGuard } from './auth/auth.guard';
+// import { APP_GUARD } from '@nestjs/core';
 
 @Module({
   imports: [
@@ -30,6 +32,8 @@ import { APP_GUARD } from '@nestjs/core';
     //   useClass: AuthGuard,
     // },
     AppService,
+    MemoryMonitorService,
+    HeapdumpService,
   ],
 })
 export class AppModule {}
