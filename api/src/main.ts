@@ -2,19 +2,19 @@ import { HttpAdapterHost, NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ErrorsFilter } from './common/filters/errors.filter';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
-import { ValidationPipe } from '@nestjs/common';
+// import { ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   // Global validation pipe
-  app.useGlobalPipes(
-    new ValidationPipe({
-      whitelist: true, // Strips away any properties not defined in the DTO
-      forbidNonWhitelisted: true, // Throws an error if non-whitelisted properties are present
-      transform: true, // Automatically transforms payloads to DTO instances
-    }),
-  );
+  // app.useGlobalPipes(
+  //   new ValidationPipe({
+  //     whitelist: true, // Strips away any properties not defined in the DTO
+  //     forbidNonWhitelisted: true, // Throws an error if non-whitelisted properties are present
+  //     transform: true, // Automatically transforms payloads to DTO instances
+  //   }),
+  // );
 
   // Swagger setup
   const config = new DocumentBuilder()

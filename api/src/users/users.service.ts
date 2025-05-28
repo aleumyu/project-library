@@ -1,6 +1,11 @@
 import { compare, hash } from 'bcrypt';
 
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { CreateUserDto, LoginDto } from './dto/user.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { AuthService } from 'src/auth/auth.service';
@@ -14,7 +19,7 @@ export class UsersService {
   async create(createUserDto: CreateUserDto) {
     const user = await this.findUserByEmail(createUserDto.email);
     if (user) {
-      throw new HttpException('user_already_exist', HttpStatus.CONFLICT);
+      throw new ConflictException('user already exists');
     }
 
     const userCreated = await this.prisma.user.create({
@@ -30,12 +35,12 @@ export class UsersService {
   async login(loginDto: LoginDto) {
     const user = await this.findUserByEmail(loginDto.email);
     if (!user) {
-      throw new HttpException('user_not_found', HttpStatus.NOT_FOUND);
+      throw new NotFoundException('user not found');
     }
 
     const isPasswordValid = await compare(loginDto.password, user.password);
     if (!isPasswordValid) {
-      throw new HttpException('invalid_credentials', HttpStatus.UNAUTHORIZED);
+      throw new UnauthorizedException('invalid credentials');
     }
 
     const token = this.authService.login(user);
