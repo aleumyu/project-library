@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreateLoanDto, UpdateLoanDto } from './dto/create-loan.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 
@@ -9,7 +9,7 @@ export class LoansService {
   async create(createLoanDto: CreateLoanDto, userId: string) {
     const canLoanBook = await this.canLoanBook(userId);
     if (!canLoanBook) {
-      throw new Error('User cannot loan more books');
+      throw new BadRequestException('User cannot loan more books');
     }
     const data = {
       bookId: createLoanDto.bookId,
