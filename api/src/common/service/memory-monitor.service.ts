@@ -4,11 +4,15 @@ import {
   OnModuleInit,
   OnModuleDestroy,
 } from '@nestjs/common';
-
+import { HeapdumpService } from './heapdump.service';
 @Injectable()
 export class MemoryMonitorService implements OnModuleInit, OnModuleDestroy {
   private readonly logger = new Logger(MemoryMonitorService.name);
   private intervalId: NodeJS.Timeout | null = null;
+  private readonly HEAP_USAGE_THRESHOLD_MB = 200;
+  private isHeapdumpInProgress = false;
+
+  constructor(private readonly heapdumpService: HeapdumpService) {}
 
   onModuleInit() {
     this.logger.log(
@@ -16,7 +20,7 @@ export class MemoryMonitorService implements OnModuleInit, OnModuleDestroy {
     );
     // To detect leaks, we'd watch for heapUsedMB steadily increasing over time
     // under consistent load without ever decreasing significantly after GC.
-    this.intervalId = setInterval(() => {
+    this.intervalId = setInterval(async () => {
       const usage = process.memoryUsage();
       // Resident Set Size - total memory used by the process.
       const rssMB = (usage.rss / 1024 / 1024).toFixed(2);
@@ -32,6 +36,15 @@ export class MemoryMonitorService implements OnModuleInit, OnModuleDestroy {
       this.logger.verbose(
         `Memory Usage: RSS=${rssMB}MB, HeapTotal=${heapTotalMB}MB, HeapUsed=${heapUsedMB}MB, External=${externalMB}MB, ArrayBuffers=${arrayBuffersMB}MB`,
       );
+      if (
+        Number(heapUsedMB) > this.HEAP_USAGE_THRESHOLD_MB &&
+        !this.isHeapdumpInProgress
+      ) {
+        this.logger.warn(
+          `Heap usage (${heapUsedMB}MB) exceeded threshold (${this.HEAP_USAGE_THRESHOLD_MB}MB). Triggering heap dump.`,
+        );
+        await this.heapdumpService.triggerHeapSnapshot();
+      }
     }, 60000);
   }
 
