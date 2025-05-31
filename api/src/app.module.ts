@@ -12,6 +12,7 @@ import { MemoryMonitorService } from './common/service/memory-monitor.service';
 import { HeapdumpService } from './common/service/heapdump.service';
 // import { AuthGuard } from './auth/auth.guard';
 // import { APP_GUARD } from '@nestjs/core';
+import { MemoryTestModule } from './memory-test/memory-test.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { HeapdumpService } from './common/service/heapdump.service';
       isGlobal: true,
       load: [authConfig],
     }),
+    MemoryTestModule,
   ],
   controllers: [AppController],
   providers: [
