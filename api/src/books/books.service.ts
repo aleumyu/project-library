@@ -1,10 +1,14 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, Logger } from '@nestjs/common';
 import { CreateBookDto } from './dto/create-book.dto';
 import { UpdateBookDto } from './dto/update-book.dto';
 import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
 export class BooksService {
+  // LEAK POINT: Static array to store IDs of all books ever fetched via findOne
+  private static viewedBookIds: string[] = [];
+  private readonly logger = new Logger(BooksService.name);
+
   constructor(private readonly prisma: PrismaService) {}
 
   async create(createBookDto: CreateBookDto) {
@@ -27,6 +31,12 @@ export class BooksService {
   }
 
   async findOne(id: string) {
+    // Simulate adding to a "recently viewed" or "tracking" list without cleanup
+    BooksService.viewedBookIds.push(id);
+    this.logger.log(
+      `'viewedBookIds' count: ${BooksService.viewedBookIds.length}`,
+    );
+
     return await this.prisma.book.findUnique({
       where: { id },
     });
