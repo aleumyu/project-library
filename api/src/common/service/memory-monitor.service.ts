@@ -45,7 +45,7 @@ export class MemoryMonitorService implements OnModuleInit, OnModuleDestroy {
         );
         await this.heapdumpService.triggerHeapSnapshot();
       }
-    }, 60000);
+    }, 5000);
   }
 
   onModuleDestroy() {

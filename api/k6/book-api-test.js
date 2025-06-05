@@ -51,3 +51,11 @@ export default function () {
 //     stdout: textSummary(data, { indent: ' ', enableColors: true }),
 //   };
 // }
+
+// NestJS 애플리케이션을 실행함.
+// 터미널에서 k6 run book-api-test.js를 실행함.
+// MemoryMonitorService 로그를 실시간으로 관찰하며 HeapUsed가 지속적으로 증가하는지 확인    .
+// k6의 RPS, 응답 시간 변화 추이를 확인. (메모리가 부족해지면 응답 시간이 급격히 늘어날 것임.)
+// 메모리가 특정 임계점을 넘거나, 응답이 매우 느려지면 http://localhost:3000/debug/heapdump를 호출하여 힙덤프를 생성함.
+// 애플리케이션이 OOM으로 크래시되면 로그를 확인해야 함.
+// 힙덤프를 분석하여 BooksService.viewedBookIds가 많은 메모리를 차지하고 있는지 확인해야 함.
