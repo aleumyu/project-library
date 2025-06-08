@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { PrismaModule } from './prisma/prisma.module';
@@ -12,6 +12,9 @@ import { MemoryMonitorService } from './common/service/memory-monitor.service';
 import { HeapdumpService } from './common/service/heapdump.service';
 // import { AuthGuard } from './auth/auth.guard';
 // import { APP_GUARD } from '@nestjs/core';
+import { MemoryTestModule } from './memory-test/memory-test.module';
+import { MetricsModule } from './metrics/metrics.module';
+import { HttpMetricsMiddleware } from './common/middleware/metrics.middleware';
 
 @Module({
   imports: [
@@ -24,6 +27,8 @@ import { HeapdumpService } from './common/service/heapdump.service';
       isGlobal: true,
       load: [authConfig],
     }),
+    MemoryTestModule,
+    MetricsModule,
   ],
   controllers: [AppController],
   providers: [
@@ -36,4 +41,8 @@ import { HeapdumpService } from './common/service/heapdump.service';
     HeapdumpService,
   ],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(HttpMetricsMiddleware).forRoutes('*'); // Apply to all routes
+  }
+}
