@@ -1,4 +1,9 @@
-import { Injectable, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
+import {
+  Injectable,
+  OnModuleDestroy,
+  OnModuleInit,
+  Logger,
+} from '@nestjs/common';
 import { PrismaClient } from '../../generated/prisma';
 import { MetricsService } from 'src/metrics/metrics.service';
 
@@ -8,6 +13,7 @@ export class PrismaService
   implements OnModuleInit, OnModuleDestroy
 {
   private metricsInterval: NodeJS.Timeout;
+  private readonly logger = new Logger(PrismaService.name);
 
   constructor(private readonly metricsService: MetricsService) {
     super();
@@ -42,10 +48,9 @@ export class PrismaService
             ?.value ?? 0;
         this.metricsService.dbConnectionsGauge.set(openConnections);
       } catch (error) {
-        // eslint-disable-next-line no-console
-        console.error('Failed to update Prisma metrics:', error);
+        this.logger.error('Failed to update Prisma metrics:', error);
       }
-    }, 5000); // Update every 5 seconds
+    }, 5000);
   }
 
   async onModuleDestroy() {
