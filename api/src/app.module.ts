@@ -15,7 +15,7 @@ import { HeapdumpService } from './common/service/heapdump.service';
 import { MemoryTestModule } from './memory-test/memory-test.module';
 import { MetricsModule } from './metrics/metrics.module';
 import { HttpMetricsMiddleware } from './common/middleware/metrics.middleware';
-
+import { CpuTestModule } from './cpu-test/cpu-test.module';
 @Module({
   imports: [
     PrismaModule,
@@ -29,6 +29,7 @@ import { HttpMetricsMiddleware } from './common/middleware/metrics.middleware';
     }),
     MemoryTestModule,
     MetricsModule,
+    CpuTestModule,
   ],
   controllers: [AppController],
   providers: [
